@@ -54,5 +54,5 @@ Mkfile.old
 dkms.conf
 
 # Auto-generated headers
-/xdg-shell-client-protocol.h
-/xdg-shell-protocol.c
+xdg-shell-client-protocol.h
+xdg-shell-protocol.c
