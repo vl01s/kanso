@@ -1,0 +1,53 @@
+If:
+  PathMatch: .*\.c
+
+CompileFlags:
+  Add: [-std=gnu17, -Isrc, -I., -Lbin, -lm, -lwayland-client, -lvulkan, -fPIC, -I$VULKAN_SDK/include, -L$VULKAN_SDK/lib]
+  Remove: [-W*, -Wformat*, -Wunused*]
+  Compiler: gcc
+
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+Diagnostics:
+  Supress: [-W*, -Wformat*, -Wunused*]
+  UnusedIncludes: Strict
+
+InlayHints:
+  BlockEnd: Yes
+  Designators: No
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: No
+  TypeNameLimit: 10
+
+Hover:
+  ShowAKA: Yes
+
+---
+If:
+  PathMatch: .*\.h
+
+CompileFlags:
+  Add: [-std=gnu17, -Isrc, -I., -Lbin, -lm, -lwayland-client, -lvulkan, -fPIC, -I$VULKAN_SDK/include, -L$VULKAN_SDK/lib]
+  Remove: [-W*, -Wunused*, -Wformat*]
+  Compiler: gcc
+
+Index:
+  Background: Build
+  StandardLibrary: Yes
+
+Diagnostics:
+  Supress: [-W*, -Wunused*, -Wformat*]
+
+InlayHints:
+  BlockEnd: Yes
+  Designators: Yes
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: No
+  TypeNameLimit: 10
+
+Hover:
+  ShowAKA: Yes
