@@ -6,12 +6,18 @@
 
 ! [[ -d ./src ]] && exit 127
 
-wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
-    ./src/xdg-shell-client-protocol.h
-wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
-    ./src/xdg-shell-protocol.c
+if [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
+    wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
+        ./src/xdg-shell-client-protocol.h
 
-C_FILENAMES=$(find ./src -type f -name "*.c")
+    wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
+        ./src/xdg-shell-protocol.c
+
+else
+    echo -e "No xdg-shell code available!" >&2
+fi
+
+C_FILENAMES=$(find ./src -type f -regex '.*\.c$')
 COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-shared" "-fPIC")
 # -Wall -Werror -pedantic
 INCLUDE_FLAGS=("-Isrc" "-I$VULKAN_SDK/include")
@@ -20,7 +26,10 @@ OUT_DIR="bin"
 
 mkdir -p ./"$OUT_DIR"
 
-gcc $C_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so "${COMPILER_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "${LINKER_FLAGS[@]}"
+gcc $C_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
+    "${COMPILER_FLAGS[@]}" \
+    "${INCLUDE_FLAGS[@]}" \
+    "${LINKER_FLAGS[@]}"
 
 # Make sure to kill debugging
 #set +x
