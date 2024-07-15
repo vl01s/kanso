@@ -4,10 +4,10 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <wayland-client.h>
-#include "pxl-buff-ops.h"
-#include "renderer.h"
-#include "shm.h"
-#include "xdg-shell-client-protocol.h"
+#include <pxl-buff-ops.h>
+#include <renderer.h>
+#include <shm.h>
+#include <xdg-shell-client-protocol.h>
 
 
 /* structs */

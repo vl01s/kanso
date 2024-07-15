@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdint.h>
-#include "pxl-buff-ops.h"
+#include <pxl-buff-ops.h>
 
 // TODO(vluis): maybe reimplement this using GPU
 void bufferCopyStretch(void *src_mem, int src_width, int src_height, int src_stride,

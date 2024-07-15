@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
-#include "shm.h"
+#include <shm.h>
 #include <log.h>
 
 /* 'randName' generates a random name for the first 'n' characters of 'name'. */
