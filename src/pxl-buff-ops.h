@@ -1,2 +1,6 @@
-void bufferCopyStretch(void *src_mem, int src_width, int src_height, int src_stride,
-        void *dest_mem, int dest_width, int dest_height, int dest_stride);
+#ifndef KANSO_PXL_BUFF_OPS_H
+#define KANSO_PXL_BUFF_OPS_H
+
+void bufferCopyStretch(void*, int, int, int, void*, int, int, int);
+
+#endif // !KANSO_PXL_BUFF_OPS_H

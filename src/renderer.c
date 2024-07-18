@@ -3,7 +3,8 @@
 #include <stdio.h>
 // #include <stdlib.h>
 #include <vulkan/vulkan.h>
-#include "renderer.h"
+#include <renderer.h>
+#include <log.h>
 
 #define STD_WIDTH 1920
 #define STD_HEIGHT 1080
@@ -82,7 +83,7 @@ static void createVkInstance(void)
 	  create_info.ppEnabledLayerNames = enabled_layers;
 
     if (vkCreateInstance(&create_info, NULL, &instance) != VK_SUCCESS) {
-        // TODO(vluis): Error logging
+        err_msg("Error: Unable to create vk instance");
         return;
     }
 }

@@ -6,7 +6,8 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
-#include "shm.h"
+#include <shm.h>
+#include <log.h>
 
 /* 'randName' generates a random name for the first 'n' characters of 'name'. */
 static void randName(char name[], int n)
@@ -43,8 +44,7 @@ int allocateShm(size_t size)
 {
     int fd = createShm();
     if (fd < 0) {
-        // TODO(vluis): Replace with propper log system
-        fprintf(stderr, "OS could not create an shm object.\n");
+        err_msg("OS could not create an shm object.");
         return -1;
     }
     int ret;
@@ -52,8 +52,7 @@ int allocateShm(size_t size)
         ret = ftruncate(fd, size);
     } while (ret < 0 && errno == EINTR);
     if (ret < 0) {
-        // TODO(vluis): Replace with propper log system
-        fprintf(stderr, "OS could not allocate memory to an shm object.\n");
+        err_msg("OS could not allocate memory to an shm object.");
         return -1;
     }
     return fd;
