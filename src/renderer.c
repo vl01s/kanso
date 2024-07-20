@@ -1,19 +1,6 @@
-// #include <math.h>
-// #include <stdint.h>
-#include <stdio.h>
-// #include <stdlib.h>
-#include <vulkan/vulkan.h>
 #include <renderer.h>
-#include <log.h>
 
-#define STD_WIDTH 1920
-#define STD_HEIGHT 1080
-#define UNINITIALIZED_BUFFER -1
-
-static VkInstance instance;
-static VkPhysicalDevice physical_device;
-
-static void createVkInstance(void)
+void createVkInstance(void)
 {
     VkApplicationInfo appinfo = {0};
     appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;

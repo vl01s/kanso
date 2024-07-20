@@ -1,5 +1,3 @@
-#include <math.h>
-#include <stdint.h>
 #include <pxl-buff-ops.h>
 
 // TODO(vluis): maybe reimplement this using GPU

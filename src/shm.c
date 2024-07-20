@@ -1,16 +1,10 @@
 /* UNIX shm operations */
 
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <time.h>
-#include <unistd.h>
-#include <shm.h>
 #include <log.h>
+#include <shm.h>
 
 /* 'randName' generates a random name for the first 'n' characters of 'name'. */
-static void randName(char name[], int n)
+void randName(char name[], const int n)
 {
     if (name && n > 0) {
         struct timespec ts;
@@ -21,9 +15,9 @@ static void randName(char name[], int n)
             r >>= 5;
         }
     }
-}
+} // STATIC
 
-static int createShm(void)
+int createShm(void)
 {
     char name[] = "/wl_shm-XXXXXX";
     randName(name + sizeof(name) - 7, 6);
@@ -38,9 +32,9 @@ static int createShm(void)
     }
     shm_unlink(name);
     return fd;
-}
+} // STATIC
 
-int allocateShm(size_t size)
+int allocateShm(const size_t size)
 {
     int fd = createShm();
     if (fd < 0) {
