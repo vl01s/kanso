@@ -75,7 +75,7 @@ void createVkInstance(void)
     }
 }
 
-void pickVkPhysicalDevice()
+void pickVkPhysicalDevice(void)
 {
     // TODO(vluis): Implement a function that chooses the best possible physical device.
     uint32_t device_count;
