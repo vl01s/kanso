@@ -7,6 +7,10 @@
 #include <vulkan/vulkan.h>
 #include <log.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #ifndef STD_WIDTH
 #define STD_WIDTH 1920
 #endif // !STD_WIDTH
@@ -25,5 +29,9 @@ void pickVkPhysicalDevice(void);
 void initVk(void);
 void cleanup(void);
 bool rendererSafeToRead(void);
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // !KANSO_RENDERER_H
