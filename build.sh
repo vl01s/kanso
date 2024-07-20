@@ -4,9 +4,27 @@
 # Uncomment for debug
 #set -x
 
+# Determine if one or more commands exist in shell or not
+_cmd() {
+    [[ $# -eq 0 ]] && return 127
+
+    local EC=0
+
+    while [[ $# -gt 0 ]]; do
+        if ! command -v "$1" &> /dev/null; then
+            EC=1
+            break
+        fi
+
+        shift
+    done
+
+    return "$EC"
+}
+
 ! [[ -d ./src ]] && exit 127
 
-if [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
+if ! _cmd 'wayland-scanner' || [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
     wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
         ./src/xdg-shell-client-protocol.h
 
