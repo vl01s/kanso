@@ -16,3 +16,5 @@ int allocateShm(const size_t);
 #endif // __cplusplus
 
 #endif // !KANSO_SHM_H
+
+// vim:ts=4:sts=4:sw=4:et:

@@ -13,3 +13,5 @@ void die(const int, char*);
 #endif // __cplusplus
 
 #endif // !KANSO_LOG_H
+
+// vim:ts=4:sts=4:sw=4:et:

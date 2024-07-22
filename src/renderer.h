@@ -32,3 +32,5 @@ bool rendererSafeToRead(void);
 #endif // __cplusplus
 
 #endif // !KANSO_RENDERER_H
+
+// vim:ts=4:sts=4:sw=4:et:

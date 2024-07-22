@@ -13,3 +13,5 @@ void bufferCopyStretch(void*, const int, const int, const int, void*, const int,
 #endif // __cplusplus
 
 #endif // !KANSO_PXL_BUFF_OPS_H
+
+// vim:ts=4:sts=4:sw=4:et:

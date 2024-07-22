@@ -26,3 +26,5 @@ void bufferCopyStretch(void *src_mem, const int src_width, const int src_height,
         row += dest_stride;
     }
 }
+
+// vim:ts=4:sts=4:sw=4:et:
