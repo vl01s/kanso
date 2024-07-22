@@ -5,8 +5,6 @@
 extern "C" {
 #endif // __cplusplus
 
-#include <math.h>
-#include <stdint.h>
 
 void bufferCopyStretch(void*, int, int, int, void*, int, int, int);
 

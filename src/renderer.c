@@ -1,4 +1,7 @@
+/* #include <math.h> */
+#include <stdint.h>
 #include <renderer.h>
+#include <log.h>
 
 void createVkInstance(void)
 {

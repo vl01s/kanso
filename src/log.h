@@ -5,9 +5,6 @@
 extern "C" {
 #endif // __cplusplus
 
-#include <stdio.h>
-#include <stdlib.h>
-
 void err_msg(char*);
 void die(const int, char*);
 

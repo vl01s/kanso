@@ -5,12 +5,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <time.h>
+#include <sys/types.h>
 
 static void randname(char[], const int);
 static int createShm(void);

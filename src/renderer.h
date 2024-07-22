@@ -1,11 +1,8 @@
 #ifndef KANSO_RENDERER_H
 #define KANSO_RENDERER_H
 
-#include <math.h>
-#include <stdint.h>
 #include <stdbool.h>
 #include <vulkan/vulkan.h>
-#include <log.h>
 
 #ifdef __cplusplus
 extern "C" {
