@@ -131,7 +131,7 @@ static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint
 }
 static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, const uint32_t name)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): Deliberately left blank
 }
 static const struct wl_registry_listener wl_registry_listener = {
     .global = wl_registry_global,
