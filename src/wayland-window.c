@@ -12,7 +12,7 @@
 
 
 /* structs */
-typedef struct {
+typedef struct _client_buffer {
     int width;
     int height;
     int bytes_per_pxl;
@@ -25,7 +25,7 @@ typedef struct {
     void* mem;
 } WlClientBuffer;
 
-typedef struct {
+typedef struct _client_objects {
     /* global objects */
     struct wl_display* wl_display;
     struct wl_registry* wl_registry;
