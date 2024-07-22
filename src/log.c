@@ -24,11 +24,9 @@ void err_msg(char *msg)
  */
 void die(const int status, char *msg)
 {
-  // Non-zero status and non-empty message
-  if (status && msg != NULL) {
+  if (status && msg != NULL) { // Non-zero status and non-empty message
     err_msg(msg);
-  // Status is zero and non-empty message
-  } else if (msg != NULL) {
+  } else if (msg != NULL) { // Status is zero and non-empty message
     printf("%s\n", msg);
   }
 
