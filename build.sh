@@ -4,6 +4,40 @@
 # Uncomment for debug
 #set -x
 
+# Print args to STDERR
+error() {
+    local TXT=("$@")
+    printf "%s\n" "${TXT[@]}" >&2
+    return 0
+}
+
+# Terminate script execution
+die() {
+    local EC=1
+
+    if [[ $# -ge 1 ]] && [[ $1 =~ ^(0|-?[1-9][0-9]*)$ ]]; then
+        EC=$1
+        shift
+    fi
+
+    if [[ $# -ge 1 ]]; then
+        local TXT=("$@")
+        if [[ $EC -eq 0 ]]; then
+            printf "%s\n" "${TXT[@]}"
+        else
+            error "${TXT[@]}"
+        fi
+    fi
+
+    exit "$EC"
+}
+
+! [[ -d ./src ]] && exit 127
+
+if [[ -z ${VULKAN_SDK+X} ]]; then
+    die 127 "Vulkan environment not initialized. Aborting."
+fi
+
 # Determine if one or more commands exist in shell or not
 _cmd() {
     [[ $# -eq 0 ]] && return 127
@@ -21,8 +55,6 @@ _cmd() {
 
     return "$EC"
 }
-
-! [[ -d ./src ]] && exit 127
 
 if ! _cmd 'wayland-scanner' || [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
     wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
