@@ -7,6 +7,7 @@
 #include <pxl-buff-ops.h>
 #include <renderer.h>
 #include <shm.h>
+#include <log.h>
 #include <xdg-shell-client-protocol.h>
 
 
@@ -244,8 +245,16 @@ void wlInitializeWindow(char* name, void* mem, int width, int height)
     client_objs.wl_display = wl_display_connect(NULL);
     // TODO(vluis): Check if we got a valid pointer to the wl_display and log it if otherwise
 
+    if (client_objs.wl_display == NULL) {
+        err_msg("Invalid pointer to wl_display");
+    }
+
     client_objs.wl_registry = wl_display_get_registry(client_objs.wl_display);
     // TODO(vluis): Check if we got a valid pointer to the wl_registry and log it if otherwise
+    if (client_objs.wl_registry == NULL) {
+        err_msg("Invalid pointer to wl_registry");
+    }
+
     wl_registry_add_listener(client_objs.wl_registry, &wl_registry_listener, &client_objs);
     wl_display_roundtrip(client_objs.wl_display);
 
