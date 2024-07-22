@@ -52,7 +52,7 @@ static void (* app_exit_function)(void);
 
 
 /* buffer functions */
-static void createBuffer(int width, int height)
+static void createBuffer(const int width, const int height)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
 
@@ -109,7 +109,7 @@ static const struct xdg_wm_base_listener xdg_wm_base_listener = {
 };
 
 static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint32_t name,
-        const char* interface, uint32_t version)
+                               const char* interface, const uint32_t version)
 {
     WlClientObjects* client_objs = data;
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
@@ -129,7 +129,7 @@ static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint
         xdg_wm_base_add_listener(client_objs->xdg_wm_base, &xdg_wm_base_listener, NULL);
     }
 }
-static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, uint32_t name)
+static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, const uint32_t name)
 {
     // deliberately left blank
 }
@@ -154,7 +154,7 @@ static const struct xdg_surface_listener xdg_surface_listener = {
 };
 
 static void xdg_toplevel_configure(void* data, struct xdg_toplevel* xdg_toplevel, int32_t width,
-        int32_t height, struct wl_array* states)
+                                   int32_t height, struct wl_array* states)
 {
     WlClientObjects* client_objs = data;
     // WlClientBuffer* client_buffer = &client_objs->client_buffer;
@@ -240,7 +240,7 @@ void wlSetRendererBuffer(void* mem, int width, int height)
     buffer->size = buffer->stride * buffer->height;
 }
 
-void wlInitializeWindow(char* name, void* mem, int width, int height)
+void wlInitializeWindow(char* name, void* mem, const int width, const int height)
 {
     client_objs.wl_display = wl_display_connect(NULL);
     // TODO(vluis): Check if we got a valid pointer to the wl_display and log it if otherwise
