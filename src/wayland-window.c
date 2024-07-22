@@ -92,7 +92,13 @@ static void paintClientSurface(void)
 }
 
 
-/* internal wayland functions and structs */
+/**
+ * Internal wayland functions and structs
+ *
+ * @param data The base data
+ * @param xdg_wm_base The base struct
+ * @param serial The ping serial
+ */
 static void xdg_wm_base_ping(void* data, struct xdg_wm_base* xdg_wm_base, uint32_t serial)
 {
     xdg_wm_base_pong(xdg_wm_base, serial);
