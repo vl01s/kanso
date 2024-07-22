@@ -27,30 +27,37 @@ int createShm(void)
 {
     char name[] = "/wl_shm-XXXXXX";
     randName(name + sizeof(name) - 7, 6);
-    int retries = 100;
-    int fd;
+    int retries = 100, fd;
+
     do {
         --retries;
         fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
     } while (fd < 0 && retries > 0 && errno == EEXIST);
-    if (fd < 0) {
-        return -1;
+
+    if (!retries && fd < 0) {
+      err_msg("Exceeded number of shm_open calls");
+      return -1;
+    } else if (fd < 0) {
+      return -1;
     }
+
     shm_unlink(name);
     return fd;
 } // STATIC
 
 int allocateShm(const size_t size)
 {
-    int fd = createShm();
-    if (fd < 0) {
+    int fd;
+    if ((fd = createShm()) < 0) {
         err_msg("OS could not create an shm object.");
         return -1;
     }
+
     int ret;
     do {
         ret = ftruncate(fd, size);
     } while (ret < 0 && errno == EINTR);
+
     if (ret < 0) {
         err_msg("OS could not allocate memory to an shm object.");
         return -1;

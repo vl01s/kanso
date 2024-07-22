@@ -170,12 +170,12 @@ static void xdg_toplevel_close(void* data, struct xdg_toplevel* xdg_toplevel)
 static void xdg_toplevel_configure_bounds(void* data, struct xdg_toplevel* xdg_toplevel,
         int32_t width, int32_t height)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): deliberately left blank
 }
 static void xdg_toplevel_wm_capabilities(void* data, struct xdg_toplevel* xdg_toplevel,
         struct wl_array* capabilities)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): deliberately left blank
     // char* wm_capabilities_names[] = { "", "window_menu", "maximize", "fullscreen", "minimize" };
 }
 static const struct xdg_toplevel_listener xdg_toplevel_listener = {

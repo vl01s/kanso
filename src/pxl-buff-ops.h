@@ -6,7 +6,7 @@ extern "C" {
 #endif // __cplusplus
 
 
-void bufferCopyStretch(void*, int, int, int, void*, int, int, int);
+void bufferCopyStretch(void*, const int, const int, const int, void*, const int, const int, const int);
 
 #ifdef __cplusplus
 }
