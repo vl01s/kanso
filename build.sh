@@ -35,7 +35,7 @@ die() {
 ! [[ -d ./src ]] && exit 127
 
 if [[ -z ${VULKAN_SDK+X} ]]; then
-    die 127 "Vulkan environment not initialized. Aborting."
+    error "WARNING: Vulkan environment not initialized"
 fi
 
 # Determine if one or more commands exist in shell or not
@@ -68,7 +68,7 @@ else
 fi
 
 C_FILENAMES=$(find ./src -type f -regex '.*\.c$')
-COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-shared" "-fPIC")
+COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC")
 # -Wall -Werror -pedantic
 INCLUDE_FLAGS=("-I$VULKAN_SDK/include" "-Isrc")
 LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm" "-shared")
@@ -79,7 +79,9 @@ mkdir -p ./"$OUT_DIR"
 gcc $C_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
     "${COMPILER_FLAGS[@]}" \
     "${INCLUDE_FLAGS[@]}" \
-    "${LINKER_FLAGS[@]}"
+    "${LINKER_FLAGS[@]}" || die 1 "Compilation failed"
 
 # Make sure to kill debugging
 #set +x
+
+die 0
