@@ -32,10 +32,14 @@ die() {
     exit "$EC"
 }
 
-! [[ -d ./src ]] && exit 127
+! [[ -d ./src ]] && die 127 \
+    "Not on root of repository." \
+    "You must execute this script in the root of the repo."
 
+# If SDK env not initialized
 if [[ -z ${VULKAN_SDK+X} ]]; then
     error "WARNING: Vulkan environment not initialized"
+    export VULKAN_SDK='/usr'
 fi
 
 # Determine if one or more commands exist in shell or not
@@ -56,7 +60,7 @@ _cmd() {
     return "$EC"
 }
 
-if ! _cmd 'wayland-scanner' || [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
+if _cmd 'wayland-scanner' && [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
     wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
         ./src/xdg-shell-client-protocol.h
 
@@ -64,12 +68,14 @@ if ! _cmd 'wayland-scanner' || [[ -f /usr/share/wayland-protocols/stable/xdg-she
         ./src/xdg-shell-protocol.c
 
 else
-    echo -e "No xdg-shell code available!" >&2
+    die 127 "No xdg-shell code available!"
 fi
 
 C_FILENAMES=$(find ./src -type f -regex '.*\.c$')
 COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC")
-# -Wall -Werror -pedantic
+# COMPILER_FLAGS+=("-Wall" "-pedantic") # Uncomment if warnings are desired
+# COMPILER_FLAGS+=("-Wextra") # Uncomment if extra warnings are desired
+# COMPILER_FLAGS+=("-Werror") # Uncomment if errors should terminate compilation
 INCLUDE_FLAGS=("-I$VULKAN_SDK/include" "-Isrc")
 LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm" "-shared")
 OUT_DIR="bin"
