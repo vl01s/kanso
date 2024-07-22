@@ -84,9 +84,9 @@ static void paintClientSurface(void)
     WlClientBuffer* renderer_buffer = &client_objs.renderer_buffer;
     void* client_buffer_mem = mmap(0, client_buffer->size, PROT_READ | PROT_WRITE,
             MAP_SHARED, client_buffer->fd, 0);
-    // bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
-    //         renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
-    //         client_buffer->stride);
+    bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
+            renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
+            client_buffer->stride);
     munmap(client_buffer_mem, client_buffer->size);
     close(client_buffer->fd);
 }
