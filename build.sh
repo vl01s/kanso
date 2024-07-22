@@ -70,8 +70,8 @@ fi
 C_FILENAMES=$(find ./src -type f -regex '.*\.c$')
 COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-shared" "-fPIC")
 # -Wall -Werror -pedantic
-INCLUDE_FLAGS=("-Isrc" "-I$VULKAN_SDK/include")
-LINKER_FLAGS=("-lvulkan" "-lwayland-client" "-lm" "-L$VULKAN_SDK/lib" "-shared")
+INCLUDE_FLAGS=("-I$VULKAN_SDK/include" "-Isrc")
+LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm" "-shared")
 OUT_DIR="bin"
 
 mkdir -p ./"$OUT_DIR"
