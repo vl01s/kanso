@@ -56,3 +56,5 @@ dkms.conf
 # Auto-generated headers
 /src/xdg-shell-client-protocol.h
 /src/xdg-shell-protocol.c
+
+.clangd

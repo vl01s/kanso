@@ -1,6 +1,16 @@
 #ifndef KANSO_PXL_BUFF_OPS_H
 #define KANSO_PXL_BUFF_OPS_H
 
-void bufferCopyStretch(void*, int, int, int, void*, int, int, int);
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+void bufferCopyStretch(void*, const int, const int, const int, void*, const int, const int, const int);
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // !KANSO_PXL_BUFF_OPS_H
+
+// vim:ts=4:sts=4:sw=4:et:

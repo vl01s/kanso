@@ -1,19 +1,9 @@
-// #include <math.h>
-// #include <stdint.h>
-#include <stdio.h>
-// #include <stdlib.h>
-#include <vulkan/vulkan.h>
+/* #include <math.h> */
+#include <stdint.h>
 #include <renderer.h>
 #include <log.h>
 
-#define STD_WIDTH 1920
-#define STD_HEIGHT 1080
-#define UNINITIALIZED_BUFFER -1
-
-static VkInstance instance;
-static VkPhysicalDevice physical_device;
-
-static void createVkInstance(void)
+void createVkInstance(void)
 {
     VkApplicationInfo appinfo = {0};
     appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -88,7 +78,7 @@ static void createVkInstance(void)
     }
 }
 
-void pickVkPhysicalDevice()
+void pickVkPhysicalDevice(void)
 {
     // TODO(vluis): Implement a function that chooses the best possible physical device.
     uint32_t device_count;
@@ -131,3 +121,5 @@ bool rendererSafeToRead(void)
 {
     return true;
 }
+
+// vim:ts=4:sts=4:sw=4:et:

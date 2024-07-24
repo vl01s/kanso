@@ -7,11 +7,12 @@
 #include <pxl-buff-ops.h>
 #include <renderer.h>
 #include <shm.h>
+#include <log.h>
 #include <xdg-shell-client-protocol.h>
 
 
 /* structs */
-typedef struct {
+typedef struct _client_buffer {
     int width;
     int height;
     int bytes_per_pxl;
@@ -24,7 +25,7 @@ typedef struct {
     void* mem;
 } WlClientBuffer;
 
-typedef struct {
+typedef struct _client_objects {
     /* global objects */
     struct wl_display* wl_display;
     struct wl_registry* wl_registry;
@@ -51,7 +52,7 @@ static void (* app_exit_function)(void);
 
 
 /* buffer functions */
-static void createBuffer(int width, int height)
+static void createBuffer(const int width, const int height)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
 
@@ -84,15 +85,21 @@ static void paintClientSurface(void)
     WlClientBuffer* renderer_buffer = &client_objs.renderer_buffer;
     void* client_buffer_mem = mmap(0, client_buffer->size, PROT_READ | PROT_WRITE,
             MAP_SHARED, client_buffer->fd, 0);
-    // bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
-    //         renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
-    //         client_buffer->stride);
+    bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
+            renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
+            client_buffer->stride);
     munmap(client_buffer_mem, client_buffer->size);
     close(client_buffer->fd);
 }
 
 
-/* internal wayland functions and structs */
+/**
+ * Internal wayland functions and structs
+ *
+ * @param data The base data
+ * @param xdg_wm_base The base struct
+ * @param serial The ping serial
+ */
 static void xdg_wm_base_ping(void* data, struct xdg_wm_base* xdg_wm_base, uint32_t serial)
 {
     xdg_wm_base_pong(xdg_wm_base, serial);
@@ -102,7 +109,7 @@ static const struct xdg_wm_base_listener xdg_wm_base_listener = {
 };
 
 static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint32_t name,
-        const char* interface, uint32_t version)
+                               const char* interface, const uint32_t version)
 {
     WlClientObjects* client_objs = data;
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
@@ -122,9 +129,9 @@ static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint
         xdg_wm_base_add_listener(client_objs->xdg_wm_base, &xdg_wm_base_listener, NULL);
     }
 }
-static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, uint32_t name)
+static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, const uint32_t name)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): Deliberately left blank
 }
 static const struct wl_registry_listener wl_registry_listener = {
     .global = wl_registry_global,
@@ -147,7 +154,7 @@ static const struct xdg_surface_listener xdg_surface_listener = {
 };
 
 static void xdg_toplevel_configure(void* data, struct xdg_toplevel* xdg_toplevel, int32_t width,
-        int32_t height, struct wl_array* states)
+                                   int32_t height, struct wl_array* states)
 {
     WlClientObjects* client_objs = data;
     // WlClientBuffer* client_buffer = &client_objs->client_buffer;
@@ -170,12 +177,12 @@ static void xdg_toplevel_close(void* data, struct xdg_toplevel* xdg_toplevel)
 static void xdg_toplevel_configure_bounds(void* data, struct xdg_toplevel* xdg_toplevel,
         int32_t width, int32_t height)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): deliberately left blank
 }
 static void xdg_toplevel_wm_capabilities(void* data, struct xdg_toplevel* xdg_toplevel,
         struct wl_array* capabilities)
 {
-    // deliberately left blank
+    // NOTE(DrKJeff16): deliberately left blank
     // char* wm_capabilities_names[] = { "", "window_menu", "maximize", "fullscreen", "minimize" };
 }
 static const struct xdg_toplevel_listener xdg_toplevel_listener = {
@@ -233,13 +240,21 @@ void wlSetRendererBuffer(void* mem, int width, int height)
     buffer->size = buffer->stride * buffer->height;
 }
 
-void wlInitializeWindow(char* name, void* mem, int width, int height)
+void wlInitializeWindow(char* name, void* mem, const int width, const int height)
 {
     client_objs.wl_display = wl_display_connect(NULL);
     // TODO(vluis): Check if we got a valid pointer to the wl_display and log it if otherwise
 
+    if (client_objs.wl_display == NULL) {
+        err_msg("Invalid pointer to wl_display");
+    }
+
     client_objs.wl_registry = wl_display_get_registry(client_objs.wl_display);
     // TODO(vluis): Check if we got a valid pointer to the wl_registry and log it if otherwise
+    if (client_objs.wl_registry == NULL) {
+        err_msg("Invalid pointer to wl_registry");
+    }
+
     wl_registry_add_listener(client_objs.wl_registry, &wl_registry_listener, &client_objs);
     wl_display_roundtrip(client_objs.wl_display);
 
@@ -271,3 +286,5 @@ void wlSetExitCallback(void (* callback_function)(void))
 {
     app_exit_function = callback_function;
 }
+
+// vim:ts=4:sts=4:sw=4:et:

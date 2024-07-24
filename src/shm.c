@@ -1,16 +1,16 @@
 /* UNIX shm operations */
 
+#include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
-#include <shm.h>
 #include <log.h>
+#include <shm.h>
 
 /* 'randName' generates a random name for the first 'n' characters of 'name'. */
-static void randName(char name[], int n)
+void randName(char name[], const int n)
 {
     if (name && n > 0) {
         struct timespec ts;
@@ -21,39 +21,48 @@ static void randName(char name[], int n)
             r >>= 5;
         }
     }
-}
+} // STATIC
 
-static int createShm(void)
+int createShm(void)
 {
     char name[] = "/wl_shm-XXXXXX";
     randName(name + sizeof(name) - 7, 6);
-    int retries = 100;
-    int fd;
+    int retries = 100, fd;
+
     do {
         --retries;
         fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
     } while (fd < 0 && retries > 0 && errno == EEXIST);
-    if (fd < 0) {
-        return -1;
+
+    if (!retries && fd < 0) {
+      err_msg("Exceeded number of shm_open calls");
+      return -1;
+    } else if (fd < 0) {
+      return -1;
     }
+
     shm_unlink(name);
     return fd;
-}
+} // STATIC
 
-int allocateShm(size_t size)
+int allocateShm(const size_t size)
 {
-    int fd = createShm();
-    if (fd < 0) {
+    int fd;
+    if ((fd = createShm()) < 0) {
         err_msg("OS could not create an shm object.");
         return -1;
     }
+
     int ret;
     do {
         ret = ftruncate(fd, size);
     } while (ret < 0 && errno == EINTR);
+
     if (ret < 0) {
         err_msg("OS could not allocate memory to an shm object.");
         return -1;
     }
     return fd;
 }
+
+// vim:ts=4:sts=4:sw=4:et:
