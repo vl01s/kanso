@@ -1,12 +1,12 @@
 #ifndef KANSO_RENDERER_H
 #define KANSO_RENDERER_H
 
-#include <stdbool.h>
-#include <vulkan/vulkan.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
+
+#include <stdbool.h>
+#include <vulkan/vulkan.h>
 
 #ifndef STD_WIDTH
 #define STD_WIDTH 1920
