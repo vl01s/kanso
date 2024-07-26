@@ -95,6 +95,7 @@ while getopts "$OPTIONS" OPTION; do
     case "$OPTION" in
         h) usage 0;;
         x) __clean_repo;;
+        *) usage 1;;
     esac
 done
 
