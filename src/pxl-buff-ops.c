@@ -11,7 +11,7 @@ void bufferCopyStretch(void *src_mem, const int src_width, const int src_height,
     float width_ratio = (float)src_width / (float)dest_width;
     float height_ratio = (float)src_height / (float)dest_height;
 
-    uint8_t *row = dest_mem;
+    uint8_t *row = (uint8_t *)dest_mem;
 
     for (int y = 0; y < dest_height; ++y) {
         uint32_t *pxl = (uint32_t *)row;
