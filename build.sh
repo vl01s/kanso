@@ -38,12 +38,6 @@ die() {
     "Not on root of repository." \
     "You must execute this script in the root of the repo."
 
-# If SDK env not initialized
-if [[ -z ${VULKAN_SDK+X} ]]; then
-    error "WARNING: Vulkan environment not initialized"
-    export VULKAN_SDK='/usr'
-fi
-
 # Determine if one or more commands exist in shell or not
 _cmd() {
     [[ $# -eq 0 ]] && return 127
@@ -98,6 +92,12 @@ while getopts "$OPTIONS" OPTION; do
         *) usage 1;;
     esac
 done
+
+# If SDK env not initialized
+if [[ -z ${VULKAN_SDK+X} ]]; then
+    error "WARNING: Vulkan environment not initialized"
+    export VULKAN_SDK='/usr'
+fi
 
 if _cmd 'wayland-scanner' && [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
     wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
