@@ -18,9 +18,6 @@ extern "C" {
 #define UNINITIALIZED_BUFFER -1
 #endif // !UNINITIALIZED_BUFFER
 
-static VkInstance instance;
-static VkPhysicalDevice physical_device;
-
 static void createVkInstance(void);
 void pickVkPhysicalDevice(void);
 void initVk(void);

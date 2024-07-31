@@ -3,7 +3,10 @@
 #include <renderer.h>
 #include <log.h>
 
-void createVkInstance(void)
+static VkInstance instance;
+static VkPhysicalDevice physical_device;
+
+static void createVkInstance(void)
 {
     VkApplicationInfo appinfo = {0};
     appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;

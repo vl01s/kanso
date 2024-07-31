@@ -7,9 +7,15 @@ extern "C" {
 
 #include <sys/types.h>
 
-static void randname(char[], const int);
+/**
+ * Generates a random name for the first 'n' characters of 'name'
+ *
+ * @param name The string name
+ * @param n The number of first `n` chars
+ */
+static void randname(char name[], const int n);
 static int createShm(void);
-int allocateShm(const size_t);
+int allocateShm(const size_t size);
 
 #ifdef __cplusplus
 }

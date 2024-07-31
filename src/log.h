@@ -5,8 +5,22 @@
 extern "C" {
 #endif // __cplusplus
 
-void err_msg(char*);
-void die(const int, char*);
+/**
+ * Outputs string to STDERR
+ *
+ * @param msg Message string to print
+ */
+void err_msg(char *msg);
+
+/**
+ * Kills the program execution
+ *
+ * If status is non-zero and message is given then output will be STDERR
+ *
+ * @param status Exit code for the program
+ * @param msg Message string to print, can be `NULL` if no message is needed
+ */
+void die(const int status, char *msg);
 
 #ifdef __cplusplus
 }
