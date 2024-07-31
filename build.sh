@@ -109,7 +109,7 @@ else
     die 127 "No xdg-shell code available!"
 fi
 
-COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC")
+COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC" "-mtune=generic")
 # COMPILER_FLAGS+=("-Wall" "-pedantic")                 # Uncomment if warnings are desired
 # COMPILER_FLAGS+=("-Wextra")                           # Uncomment if extra warnings are desired
 # COMPILER_FLAGS+=("-Werror")                           # Uncomment if errors should terminate compilation
