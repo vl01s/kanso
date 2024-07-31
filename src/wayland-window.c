@@ -48,10 +48,10 @@ static const struct wl_callback_listener wl_frame_callback_listener;
 static const struct xdg_surface_listener xdg_surface_listener;
 static const struct xdg_toplevel_listener xdg_toplevel_listener;
 static const struct xdg_wm_base_listener xdg_wm_base_listener;
+
 static void (* app_exit_function)(void);
 
-
-/* buffer functions */
+/* Buffer Functions */
 static void createBuffer(const int width, const int height)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
@@ -79,6 +79,7 @@ static void createBuffer(const int width, const int height)
         wl_shm_pool_destroy(pool);
     }
 }
+
 static void paintClientSurface(void)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
@@ -92,7 +93,6 @@ static void paintClientSurface(void)
     close(client_buffer->fd);
 }
 
-
 /**
  * Internal wayland functions and structs
  *
@@ -104,6 +104,7 @@ static void xdg_wm_base_ping(void* data, struct xdg_wm_base* xdg_wm_base, uint32
 {
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
+
 static const struct xdg_wm_base_listener xdg_wm_base_listener = {
     .ping = xdg_wm_base_ping
 };
@@ -129,10 +130,12 @@ static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint
         xdg_wm_base_add_listener(client_objs->xdg_wm_base, &xdg_wm_base_listener, NULL);
     }
 }
+
 static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, const uint32_t name)
 {
     // NOTE(DrKJeff16): Deliberately left blank
 }
+
 static const struct wl_registry_listener wl_registry_listener = {
     .global = wl_registry_global,
     .global_remove = wl_registry_global_remove,
@@ -149,6 +152,7 @@ static void xdg_surface_configure(void* data, struct xdg_surface* xdg_surface, u
     }
     wl_surface_commit(client_objs->wl_surface);
 }
+
 static const struct xdg_surface_listener xdg_surface_listener = {
     .configure = xdg_surface_configure
 };
@@ -169,16 +173,19 @@ static void xdg_toplevel_configure(void* data, struct xdg_toplevel* xdg_toplevel
         paintClientSurface();
     }
 }
+
 static void xdg_toplevel_close(void* data, struct xdg_toplevel* xdg_toplevel)
 {
     // TODO(vluis): Send a message to the user to confirm exit
     app_exit_function();
 }
+
 static void xdg_toplevel_configure_bounds(void* data, struct xdg_toplevel* xdg_toplevel,
         int32_t width, int32_t height)
 {
     // NOTE(DrKJeff16): deliberately left blank
 }
+
 static void xdg_toplevel_wm_capabilities(void* data, struct xdg_toplevel* xdg_toplevel,
         struct wl_array* capabilities)
 {
@@ -203,6 +210,7 @@ static void wl_buffer_release(void* data, struct wl_buffer* wl_buffer)
 static const struct wl_buffer_listener wl_buffer_listener = {
     .release = wl_buffer_release
 };
+
 
 static void new_frame(void* data, struct wl_callback* wl_callback, uint32_t time)
 {
