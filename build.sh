@@ -119,8 +119,8 @@ OBJ_DIR="obj"
 OUT_DIR="bin"
 
 mkdir -p "$OBJ_DIR"
-mkdir -p "$OUT_DIR"
 
+# Compile each source file into object file
 for F in ./src/*.c; do
     FILE="$(basename "$F")"
 
@@ -130,6 +130,8 @@ for F in ./src/*.c; do
 done
 
 O_FILENAMES=$(find ./"$OBJ_DIR" -type f -regex '.*\.o$')
+
+mkdir -p "$OUT_DIR"
 
 gcc $O_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
     "${COMPILER_FLAGS[@]}" \
