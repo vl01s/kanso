@@ -79,8 +79,7 @@ usage() {
 __clean_repo() {
     local EC=0
 
-    rm -f ./src/xdg-shell-client-protocol.h ./src/xdg-shell-protocol.c || EC=1
-    rm -rf ./bin || EC=1
+    rm -rf ./src/xdg-shell-client-protocol.h ./src/xdg-shell-protocol.c ./bin ./obj
 
     die "$EC"
 }
@@ -110,21 +109,33 @@ else
     die 127 "No xdg-shell code available!"
 fi
 
-C_FILENAMES=$(find ./src -type f -regex '.*\.c$')
 COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC")
-# COMPILER_FLAGS+=("-Wall" "-pedantic") # Uncomment if warnings are desired
-# COMPILER_FLAGS+=("-Wextra") # Uncomment if extra warnings are desired
-# COMPILER_FLAGS+=("-Werror") # Uncomment if errors should terminate compilation
+# COMPILER_FLAGS+=("-Wall" "-pedantic")                 # Uncomment if warnings are desired
+# COMPILER_FLAGS+=("-Wextra")                           # Uncomment if extra warnings are desired
+# COMPILER_FLAGS+=("-Werror")                           # Uncomment if errors should terminate compilation
 INCLUDE_FLAGS=("-I$VULKAN_SDK/include" "-Isrc")
-LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm" "-shared")
+LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm")
+OBJ_DIR="obj"
 OUT_DIR="bin"
 
-mkdir -p ./"$OUT_DIR"
+mkdir -p "$OBJ_DIR"
+mkdir -p "$OUT_DIR"
 
-gcc $C_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
+for F in ./src/*.c; do
+    FILE="$(basename "$F")"
+
+    gcc -c ./src/"$FILE" -o ./"$OBJ_DIR/${FILE%.c}.o" \
+        "${COMPILER_FLAGS[@]}" \
+        "${INCLUDE_FLAGS[@]}" || die 1 "Failed to compile \`$F\` into object file"
+done
+
+O_FILENAMES=$(find ./"$OBJ_DIR" -type f -regex '.*\.o$')
+
+gcc $O_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
     "${COMPILER_FLAGS[@]}" \
     "${INCLUDE_FLAGS[@]}" \
-    "${LINKER_FLAGS[@]}" || die 1 "Compilation failed"
+    "${LINKER_FLAGS[@]}" \
+    -shared || die 1 "Compilation failed"
 
 # Make sure to kill debugging
 #set +x
