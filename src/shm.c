@@ -26,7 +26,7 @@ static int createShm(void)
 {
     char name[] = "/wl_shm-XXXXXX";
     randName(name + sizeof(name) - 7, 6);
-    int retries = 100, fd;
+    int retries = 100, fd = -1;
 
     do {
         --retries;
@@ -52,7 +52,7 @@ int allocateShm(const size_t size)
         return -1;
     }
 
-    int ret;
+    int ret = -1;
     do {
         ret = ftruncate(fd, size);
     } while (ret < 0 && errno == EINTR);
