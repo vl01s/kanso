@@ -54,7 +54,7 @@ int allocateShm(const size_t size)
 
     int ret = -1;
     do {
-        ret = ftruncate(fd, size);
+        ret = ftruncate(fd, (off_t)size);
     } while (ret < 0 && errno == EINTR);
 
     if (ret < 0) {
