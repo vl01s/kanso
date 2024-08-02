@@ -57,6 +57,7 @@ dkms.conf
 /src/xdg-shell-client-protocol.h
 /src/xdg-shell-protocol.c
 
+# Dotfiles for project
 .clangd
 
 # Assembler files
