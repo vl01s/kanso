@@ -39,6 +39,9 @@ die() {
         fi
     fi
 
+    # Make sure to kill debugging
+    set +x
+
     exit "$EC"
 }
 
@@ -151,8 +154,5 @@ gcc $O_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
     -shared || die 1 "Compilation failed"
 
 [[ $STRIP -eq 1 ]] && strip ./"$OUT_DIR"/libkansoengine.so
-
-# Make sure to kill debugging
-#set +x
 
 die 0
