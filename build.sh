@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Build script for kanso engine
 
-OPTIONS=':hx'
+OPTIONS=':hxs'
+
+STRIP=0
 
 # Uncomment for debug
 #set -x
@@ -88,6 +90,7 @@ while getopts "$OPTIONS" OPTION; do
     case "$OPTION" in
         h) usage 0;;
         x) __clean_repo;;
+        s) STRIP=1 ;;
         *) usage 1;;
     esac
 done
@@ -138,6 +141,8 @@ gcc $O_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
     "${INCLUDE_FLAGS[@]}" \
     "${LINKER_FLAGS[@]}" \
     -shared || die 1 "Compilation failed"
+
+[[ $STRIP -eq 1 ]] && strip ./"$OUT_DIR"/libkansoengine.so
 
 # Make sure to kill debugging
 #set +x
