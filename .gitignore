@@ -63,3 +63,6 @@ dkms.conf
 # Assembler files
 *.s
 *.S
+
+# Preprocessor files
+*.i
