@@ -59,6 +59,8 @@ dkms.conf
 
 # Dotfiles for project
 .clangd
+.clang-format
+.clang-tidy
 
 # Assembler files
 *.s
