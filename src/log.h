@@ -3,7 +3,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
+#endif /* __cplusplus */
 
 /**
  * Outputs string to STDERR
@@ -24,8 +24,8 @@ void die(const int status, char *msg);
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif /* __cplusplus */
 
-#endif // !KANSO_LOG_H
+#endif /* !KANSO_LOG_H */
 
 // vim:ts=4:sts=4:sw=4:et:

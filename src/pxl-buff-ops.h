@@ -3,7 +3,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
+#endif /* __cplusplus */
 
 void bufferCopyStretch(void *src_mem, const int src_width, const int src_height,
                        const int src_stride, void *dest_mem,
@@ -12,8 +12,8 @@ void bufferCopyStretch(void *src_mem, const int src_width, const int src_height,
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif /* __cplusplus */
 
-#endif // !KANSO_PXL_BUFF_OPS_H
+#endif /* !KANSO_PXL_BUFF_OPS_H */
 
 // vim:ts=4:sts=4:sw=4:et:

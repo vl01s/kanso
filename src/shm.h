@@ -3,7 +3,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif // __cplusplus
+#endif /* __cplusplus */
 
 #include <sys/types.h>
 
@@ -19,8 +19,8 @@ int allocateShm(const size_t size);
 
 #ifdef __cplusplus
 }
-#endif // __cplusplus
+#endif /* __cplusplus */
 
-#endif // !KANSO_SHM_H
+#endif /* !KANSO_SHM_H */
 
 // vim:ts=4:sts=4:sw=4:et:
