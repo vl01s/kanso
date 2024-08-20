@@ -99,7 +99,7 @@ __clean_repo() {
         RM_COMMAND+=("-rf")
     fi
 
-    ${RM_COMMAND[*]} ./src/xdg-shell-client-protocol.h ./src/xdg-shell-protocol.c ./bin ./obj
+    ${RM_COMMAND[@]} ./src/xdg-shell-client-protocol.h ./src/xdg-shell-protocol.c ./bin ./obj
 
     die "$EC"
 }
