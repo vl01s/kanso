@@ -25,12 +25,15 @@ static void randName(char name[], const int n)
 static int createShm(void)
 {
     char name[] = "/wl_shm-XXXXXX";
+    /// TODO(DrKJeff16): I am not entirely comfortable with the `sizeof()` approach
+    /// I'd suggest using a pointer array instead
     randName(name + sizeof(name) - 7, 6);
     int retries = 100, fd = -1;
 
     do {
         --retries;
-        fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+        /// Opening in mode 644
+        fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     } while (fd < 0 && retries > 0 && errno == EEXIST);
 
     if (!retries && fd < 0) {
