@@ -18,3 +18,4 @@ repos:
     rev: v18.1.8  # Use the sha / tag you want to point at
     hooks:
     - id: clang-format
+      verbose: true
