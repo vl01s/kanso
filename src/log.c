@@ -20,4 +20,4 @@ void die(const int status, char *msg)
   exit(status);
 }
 
-// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:noet:
+// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:nopi:

@@ -30,4 +30,4 @@ bool rendererSafeToRead(void);
 
 #endif /* !KANSO_RENDERER_H */
 
-// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:noet:
+// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:nopi:
