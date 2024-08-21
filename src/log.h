@@ -10,7 +10,8 @@ extern "C" {
  *
  * @param msg Message string to print
  */
-void err_msg(char *msg);
+void err_msg(char *const msg);
+void verr_msg(char *const fmt, ...);
 
 /**
  * Kills the program execution
@@ -20,7 +21,8 @@ void err_msg(char *msg);
  * @param status Exit code for the program
  * @param msg Message string to print, can be `NULL` if no message is needed
  */
-void die(const int status, char *msg);
+void die(const int status, char *const msg);
+void vdie(const int status, char *const fmt, ...);
 
 #ifdef __cplusplus
 }
