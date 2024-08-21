@@ -46,7 +46,7 @@ static int createShm(void)
 
 int allocateShm(const size_t size)
 {
-    int fd;
+    int fd = -1;
     if ((fd = createShm()) < 0) {
         err_msg("OS could not create an shm object.");
         return -1;

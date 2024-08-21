@@ -13,7 +13,7 @@ extern "C" {
  * @param name The string name
  * @param n The number of first `n` chars
  */
-static void randname(char name[], const int n);
+static void randName(char name[], const int n);
 static int createShm(void);
 int allocateShm(const size_t size);
 

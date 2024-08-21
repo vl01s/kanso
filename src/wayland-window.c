@@ -65,8 +65,9 @@ static void createBuffer(const int width, const int height)
     client_buffer->bytes_per_pxl = bytes_per_pxl;
     client_buffer->stride = stride;
     client_buffer->size = size;
-    int fd = allocateShm(size);
-    if (fd < 0) {
+
+    int fd = -1;
+    if ((fd = allocateShm(size)) < 0) {
         client_buffer->fd = -1;
         client_buffer->wl_buffer = 0;
     }
