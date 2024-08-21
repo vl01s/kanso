@@ -28,4 +28,4 @@ void die(const int status, char *msg);
 
 #endif /* !KANSO_LOG_H */
 
-// vim:ts=4:sts=4:sw=4:et:
+// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:noet:

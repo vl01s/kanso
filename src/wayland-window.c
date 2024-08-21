@@ -295,4 +295,4 @@ void wlSetExitCallback(void (* callback_function)(void))
     app_exit_function = callback_function;
 }
 
-// vim:ts=4:sts=4:sw=4:et:
+// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:noet:
