@@ -49,7 +49,7 @@ static const struct xdg_surface_listener xdg_surface_listener;
 static const struct xdg_toplevel_listener xdg_toplevel_listener;
 static const struct xdg_wm_base_listener xdg_wm_base_listener;
 
-static void (* app_exit_function)(void);
+static void (*app_exit_function)(void);
 
 /* Buffer Functions */
 static void createBuffer(const int width, const int height)
@@ -86,9 +86,11 @@ static void paintClientSurface(void)
     WlClientBuffer* renderer_buffer = &client_objs.renderer_buffer;
     void* client_buffer_mem = mmap(0, client_buffer->size, PROT_READ | PROT_WRITE,
             MAP_SHARED, client_buffer->fd, 0);
+
     bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
             renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
             client_buffer->stride);
+
     munmap(client_buffer_mem, client_buffer->size);
     close(client_buffer->fd);
 }
@@ -106,27 +108,28 @@ static void xdg_wm_base_ping(void* data, struct xdg_wm_base* xdg_wm_base, uint32
 }
 
 static const struct xdg_wm_base_listener xdg_wm_base_listener = {
-    .ping = xdg_wm_base_ping
+    .ping = xdg_wm_base_ping,
 };
 
 static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint32_t name,
                                const char* interface, const uint32_t version)
 {
     WlClientObjects* client_objs = data;
+
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
-        #define WL_COMPOSITOR_VERSION 5
+#define WL_COMPOSITOR_VERSION 5
         client_objs->wl_compositor = wl_registry_bind(wl_registry, name, &wl_compositor_interface,
                 WL_COMPOSITOR_VERSION);
     }
     else if (strcmp(interface, wl_shm_interface.name) == 0) {
-        #define WL_SHM_VERSION 1
+#define WL_SHM_VERSION 1
         client_objs->wl_shm = wl_registry_bind(wl_registry, name, &wl_shm_interface,
-               WL_SHM_VERSION);
+                WL_SHM_VERSION);
     }
     else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
-        #define XDG_WM_BASE_VERSION 2
+#define XDG_WM_BASE_VERSION 2
         client_objs->xdg_wm_base = wl_registry_bind(wl_registry, name, &xdg_wm_base_interface,
-               XDG_WM_BASE_VERSION);
+                XDG_WM_BASE_VERSION);
         xdg_wm_base_add_listener(client_objs->xdg_wm_base, &xdg_wm_base_listener, NULL);
     }
 }
