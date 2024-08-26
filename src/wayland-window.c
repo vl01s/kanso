@@ -48,10 +48,10 @@ static const struct wl_callback_listener wl_frame_callback_listener;
 static const struct xdg_surface_listener xdg_surface_listener;
 static const struct xdg_toplevel_listener xdg_toplevel_listener;
 static const struct xdg_wm_base_listener xdg_wm_base_listener;
-static void (* app_exit_function)(void);
 
+static void (*app_exit_function)(void);
 
-/* buffer functions */
+/* Buffer Functions */
 static void createBuffer(const int width, const int height)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
@@ -65,8 +65,9 @@ static void createBuffer(const int width, const int height)
     client_buffer->bytes_per_pxl = bytes_per_pxl;
     client_buffer->stride = stride;
     client_buffer->size = size;
-    int fd = allocateShm(size);
-    if (fd < 0) {
+
+    int fd = -1;
+    if ((fd = allocateShm(size)) < 0) {
         client_buffer->fd = -1;
         client_buffer->wl_buffer = 0;
     }
@@ -79,19 +80,21 @@ static void createBuffer(const int width, const int height)
         wl_shm_pool_destroy(pool);
     }
 }
+
 static void paintClientSurface(void)
 {
     WlClientBuffer* client_buffer = &client_objs.client_buffer;
     WlClientBuffer* renderer_buffer = &client_objs.renderer_buffer;
     void* client_buffer_mem = mmap(0, client_buffer->size, PROT_READ | PROT_WRITE,
             MAP_SHARED, client_buffer->fd, 0);
+
     bufferCopyStretch(renderer_buffer->mem, renderer_buffer->width, renderer_buffer->height,
             renderer_buffer->stride, client_buffer_mem, client_buffer->width, client_buffer->height,
             client_buffer->stride);
+
     munmap(client_buffer_mem, client_buffer->size);
     close(client_buffer->fd);
 }
-
 
 /**
  * Internal wayland functions and structs
@@ -104,35 +107,39 @@ static void xdg_wm_base_ping(void* data, struct xdg_wm_base* xdg_wm_base, uint32
 {
     xdg_wm_base_pong(xdg_wm_base, serial);
 }
+
 static const struct xdg_wm_base_listener xdg_wm_base_listener = {
-    .ping = xdg_wm_base_ping
+    .ping = xdg_wm_base_ping,
 };
 
 static void wl_registry_global(void* data, struct wl_registry* wl_registry, uint32_t name,
                                const char* interface, const uint32_t version)
 {
     WlClientObjects* client_objs = data;
+
     if (strcmp(interface, wl_compositor_interface.name) == 0) {
-        #define WL_COMPOSITOR_VERSION 5
+#define WL_COMPOSITOR_VERSION 5
         client_objs->wl_compositor = wl_registry_bind(wl_registry, name, &wl_compositor_interface,
                 WL_COMPOSITOR_VERSION);
     }
     else if (strcmp(interface, wl_shm_interface.name) == 0) {
-        #define WL_SHM_VERSION 1
+#define WL_SHM_VERSION 1
         client_objs->wl_shm = wl_registry_bind(wl_registry, name, &wl_shm_interface,
-               WL_SHM_VERSION);
+                WL_SHM_VERSION);
     }
     else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
-        #define XDG_WM_BASE_VERSION 2
+#define XDG_WM_BASE_VERSION 2
         client_objs->xdg_wm_base = wl_registry_bind(wl_registry, name, &xdg_wm_base_interface,
-               XDG_WM_BASE_VERSION);
+                XDG_WM_BASE_VERSION);
         xdg_wm_base_add_listener(client_objs->xdg_wm_base, &xdg_wm_base_listener, NULL);
     }
 }
+
 static void wl_registry_global_remove(void* data, struct wl_registry* wl_registry, const uint32_t name)
 {
     // NOTE(DrKJeff16): Deliberately left blank
 }
+
 static const struct wl_registry_listener wl_registry_listener = {
     .global = wl_registry_global,
     .global_remove = wl_registry_global_remove,
@@ -149,6 +156,7 @@ static void xdg_surface_configure(void* data, struct xdg_surface* xdg_surface, u
     }
     wl_surface_commit(client_objs->wl_surface);
 }
+
 static const struct xdg_surface_listener xdg_surface_listener = {
     .configure = xdg_surface_configure
 };
@@ -169,16 +177,19 @@ static void xdg_toplevel_configure(void* data, struct xdg_toplevel* xdg_toplevel
         paintClientSurface();
     }
 }
+
 static void xdg_toplevel_close(void* data, struct xdg_toplevel* xdg_toplevel)
 {
     // TODO(vluis): Send a message to the user to confirm exit
     app_exit_function();
 }
+
 static void xdg_toplevel_configure_bounds(void* data, struct xdg_toplevel* xdg_toplevel,
         int32_t width, int32_t height)
 {
     // NOTE(DrKJeff16): deliberately left blank
 }
+
 static void xdg_toplevel_wm_capabilities(void* data, struct xdg_toplevel* xdg_toplevel,
         struct wl_array* capabilities)
 {
@@ -203,6 +214,7 @@ static void wl_buffer_release(void* data, struct wl_buffer* wl_buffer)
 static const struct wl_buffer_listener wl_buffer_listener = {
     .release = wl_buffer_release
 };
+
 
 static void new_frame(void* data, struct wl_callback* wl_callback, uint32_t time)
 {
@@ -287,4 +299,4 @@ void wlSetExitCallback(void (* callback_function)(void))
     app_exit_function = callback_function;
 }
 
-// vim:ts=4:sts=4:sw=4:et:
+// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:nopi:
