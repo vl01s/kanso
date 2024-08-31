@@ -4,12 +4,13 @@
 # Uncomment for debug
 #set -x
 
-OPTIONS=':hxsv'
+OPTIONS=':hxsvg'
 
 # Option-related
 STRIP=0                   # Becomes 1 if `-s` is passed
 CLEAN=0                   # Becomes 1 if `-x` is passed
 VERBOSE=0                 # Becomes 1 if `-v` is passed
+ONLY_GENERATE=0           # Becomes 1 if `-g` is passed
 
 # Project directories
 OBJ_DIR="obj"
@@ -19,6 +20,22 @@ OUT_DIR="bin"
 error() {
     local TXT=("$@")
     printf "%s\n" "${TXT[@]}" >&2
+    return 0
+}
+
+verb_error() {
+    if [[ $VERBOSE -eq 1 ]] && [[ $# -ge 1 ]]; then
+        error "$@"
+    fi
+    return 0
+}
+
+verb_log() {
+    if [[ $VERBOSE -eq 1 ]] && [[ $# -ge 1 ]]; then
+        local TXT=("$@")
+        printf "%s\n" "${TXT[@]}"
+    fi
+
     return 0
 }
 
@@ -89,17 +106,42 @@ usage() {
     die "$EC" "${TXT[@]}"
 }
 
-__clean_repo() {
-    local EC=0
-    local RM_COMMAND=("rm")
+__autogen() {
+    if _cmd 'wayland-scanner' && [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
+        verb_log "Generating \`src/xdg-shell-client-protocol.h\`..."
+        wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
+            ./src/xdg-shell-client-protocol.h
 
-    if [[ $VERBOSE -eq 1 ]]; then
-        RM_COMMAND+=("-rvf")
+        verb_log "Done"
+
+        verb_log "Generating \`src/xdg-shell-protocol.c\`..."
+        wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
+            ./src/xdg-shell-protocol.c
+
+        verb_log "Done"
     else
-        RM_COMMAND+=("-rf")
+        die 127 "No xdg-shell code available!"
     fi
 
-    ${RM_COMMAND[@]} ./src/xdg-shell-client-protocol.h ./src/xdg-shell-protocol.c ./bin ./obj
+    return 0
+}
+
+__clean_repo() {
+    local EC=0
+    local RM_COMMAND=""
+
+    if [[ $VERBOSE -eq 1 ]]; then
+        RM_COMMAND="rm -rvf"
+    else
+        RM_COMMAND="rm -rf"
+    fi
+
+    verb_log "Cleaning up..."
+
+    eval "$RM_COMMAND src/xdg-shell-client-protocol.h src/xdg-shell-protocol.c bin obj"
+    EC=$?
+
+    verb_log "" "Done"
 
     die "$EC"
 }
@@ -115,6 +157,7 @@ while getopts "$OPTIONS" OPTION; do
         x) CLEAN=1;;
         s) STRIP=1 ;;
         v) VERBOSE=1 ;;
+        g) ONLY_GENERATE=1 ;;
         *) usage 1;;
     esac
 done
@@ -125,55 +168,56 @@ done
 # If SDK env not initialized
 if [[ -z ${VULKAN_SDK+X} ]]; then
     error "WARNING: Vulkan environment not initialized"
+
+    verb_error "Falling back to \`/usr\`"
     export VULKAN_SDK='/usr'
 fi
 
-if _cmd 'wayland-scanner' && [[ -f /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml ]]; then
-    wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
-        ./src/xdg-shell-client-protocol.h
+__autogen
 
-    wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml \
-        ./src/xdg-shell-protocol.c
-
-else
-    die 127 "No xdg-shell code available!"
-fi
+[[ $ONLY_GENERATE -eq 1 ]] && die 0
 
 COMPILER_FLAGS=("-std=gnu17" "-g" "-Og" "-fPIC" "-mtune=generic")
-[[ $VERBOSE -eq 1 ]] && COMPILER_FLAGS+=("-Wall" "-pedantic")
+[[ $VERBOSE -eq 1 ]] && COMPILER_FLAGS+=("-Wall" "-pedantic" "-Wno-unused")
 # COMPILER_FLAGS+=("-Wextra")                           # Uncomment if extra warnings are desired
 # COMPILER_FLAGS+=("-Werror")                           # Uncomment if errors should terminate compilation
 INCLUDE_FLAGS=("-I$VULKAN_SDK/include" "-Isrc")
-LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm")
+LINKER_FLAGS=("-L$VULKAN_SDK/lib" "-lvulkan" "-lwayland-client" "-lm" "-lc")
 
 mkdir -p "$OBJ_DIR"
 
 # Compile each source file into object file
-for F in ./src/*.c; do
+for F in src/*.c; do
     FILE="$(basename "$F")"
 
-    [[ $VERBOSE -eq 1 ]] && printf "%s ==> %s\n" "$F" "./${OBJ_DIR}/${FILE%.c}.o"
+    verb_log "$F ==> ${OBJ_DIR}/${FILE%.c}.o"
 
-    gcc -c ./src/"$FILE" -o ./"$OBJ_DIR/${FILE%.c}.o" \
+    gcc -c src/"$FILE" -o "$OBJ_DIR/${FILE%.c}.o" \
         "${COMPILER_FLAGS[@]}" \
         "${INCLUDE_FLAGS[@]}" || die 1 "Failed to compile \`$F\` into object file"
+
 done
 
-O_FILENAMES=$(find ./"$OBJ_DIR" -type f -regex '.*\.o$')
+O_FILENAMES=$(find "$OBJ_DIR" -type f -regex '.*\.o$')
 
 mkdir -p "$OUT_DIR"
 
-[[ $VERBOSE -eq 1 ]] && printf "%s\n" "Generating \`libkansoengine.so\`..."
+verb_log "Generating \`libkansoengine.so\`..."
 
-gcc $O_FILENAMES -o ./"$OUT_DIR"/libkansoengine.so \
+gcc $O_FILENAMES -o "$OUT_DIR"/libkansoengine.so \
     "${COMPILER_FLAGS[@]}" \
     "${INCLUDE_FLAGS[@]}" \
     "${LINKER_FLAGS[@]}" \
     -shared || die 1 "Compilation failed"
 
+
+verb_log "Done" ""
+
 if [[ $STRIP -eq 1 ]]; then
-    [[ $VERBOSE -eq 1 ]] && printf "%s\n" "Stripping \`libkansoengine.so\`..."
-    strip ./"$OUT_DIR"/libkansoengine.so
+    verb_log "Stripping \`libkansoengine.so\`..."
+    strip "$OUT_DIR"/libkansoengine.so \
+        && verb_log "Done" ""
+
 fi
 
 die 0
