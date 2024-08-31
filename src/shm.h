@@ -1,23 +1,24 @@
 #ifndef KANSO_SHM_H
-#define KANSO_SHM_H
+#define KANSO_SHM_H 1
 
-#ifdef __cplusplus
-extern "C" {
+#if defined(__cplusplus)
+extern "C"
+{
 #endif /* __cplusplus */
 
 #include <sys/types.h>
 
-/**
- * Generates a random name for the first 'n' characters of 'name'
- *
- * @param name The string name
- * @param n The number of first `n` chars
- */
-static void randName(char name[], const int n);
-static int createShm(void);
-int allocateShm(const size_t size);
+  /**
+   * Generates a random name for the first 'n' characters of 'name'
+   *
+   * @param name The string name
+   * @param n The number of first `n` chars
+   */
+  static void randName(char name[], const int n);
+  static int createShm(void);
+  int allocateShm(const size_t size);
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 }
 #endif /* __cplusplus */
 
