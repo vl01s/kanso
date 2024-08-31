@@ -68,3 +68,7 @@ dkms.conf
 
 # Preprocessor files
 *.i
+
+# Vulkan env symlinks
+setup-env.sh
+setup-env
