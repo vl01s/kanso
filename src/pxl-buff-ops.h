@@ -2,8 +2,7 @@
 #define KANSO_PXL_BUFF_OPS_H 1
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
   void bufferCopyStretch(void* src_mem,

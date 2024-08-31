@@ -7,8 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void
-err(char* const msg)
+void err(char *const msg)
 {
   if (null_ptr(msg)) {
     return;
@@ -17,8 +16,7 @@ err(char* const msg)
   fprintf(stderr, "%s\n", msg);
 }
 
-int
-fd_log(int fd, char* const msg)
+int fd_log(int fd, char *const msg)
 {
   if (fd < 0 || null_ptr(msg)) {
     return -1;
@@ -27,8 +25,7 @@ fd_log(int fd, char* const msg)
   return write(fd, msg, strlen(msg));
 }
 
-int
-fd_vlog(int fd, char* const fmt, ...)
+int fd_vlog(int fd, char *const fmt, ...)
 {
   if (fd < 0 || null_ptr(fmt)) {
     return -1;
@@ -43,15 +40,13 @@ fd_vlog(int fd, char* const fmt, ...)
   return res;
 }
 
-int
-file_log(const char* const fpath, char* const msg)
+int file_log(const char *const fpath, char *const msg)
 {
   if (null_ptr(fpath) || null_ptr(msg)) {
     return -1;
   }
 
-  int fd =
-    open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
+  int fd = open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
 
   if (fd < 0) {
     verr("(file_log): File `%s` can't be opened (fd: %d)", fpath, fd);
@@ -67,15 +62,14 @@ file_log(const char* const fpath, char* const msg)
 
   return close(fd);
 }
-int
-file_vlog(const char* const fpath, char* const fmt, ...)
+
+int file_vlog(const char *const fpath, char *const fmt, ...)
 {
   if (null_ptr(fpath) || null_ptr(fmt)) {
     return -1;
   }
 
-  int fd =
-    open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
+  int fd = open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
 
   if (fd < 0) {
     verr("(file_vlog): File `%s` can't be opened (fd: %d)", fpath, fd);
@@ -96,8 +90,7 @@ file_vlog(const char* const fpath, char* const fmt, ...)
   return res;
 }
 
-void
-verr(char* const fmt, ...)
+void verr(char *const fmt, ...)
 {
   if (null_ptr(fmt)) {
     return;
@@ -110,8 +103,7 @@ verr(char* const fmt, ...)
   va_end(argp);
 }
 
-void
-die(const int status, char* const msg)
+void die(const int status, char *const msg)
 {
   if (!null_ptr(msg)) { /// Non-empty message
     fprintf(status ? stderr : stdout, "%s\n", msg);
@@ -120,8 +112,7 @@ die(const int status, char* const msg)
   exit(status);
 }
 
-void
-vdie(const int status, char* const fmt, ...)
+void vdie(const int status, char *const fmt, ...)
 {
   if (!null_ptr(fmt)) {
     va_list argp;

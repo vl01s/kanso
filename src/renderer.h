@@ -2,8 +2,7 @@
 #define KANSO_RENDERER_H 1
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 #include <stdbool.h>

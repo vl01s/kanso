@@ -21,7 +21,7 @@ randName(char name[], const int n)
   long r = ts.tv_nsec;
   for (int i = 0; i < n; ++i) {
     name[i] =
-      'A' + (r & 15) + (r & 16) * 2; // random letter from A to P or a to p
+        'A' + (r & 15) + (r & 16) * 2; // random letter from A to P or a to p
     r >>= 5;
   }
 }
@@ -38,8 +38,8 @@ createShm(void)
   do {
     --retries;
     /// Opening in mode 644
-    fd = shm_open(
-      name, O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+    fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL,
+                  S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
   } while (fd < 0 && retries > 0 && errno == EEXIST);
 
   if (!retries) {
@@ -71,8 +71,7 @@ allocateShm(const size_t size)
 
   if (ret < 0) {
     verr("(allocateShm): %s (fd: %d)\n",
-         "OS could not allocate memory to an shm object",
-         ret);
+         "OS could not allocate memory to an shm object", ret);
     return -1;
   }
 

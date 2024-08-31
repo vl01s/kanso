@@ -14,17 +14,17 @@ bufferCopyStretch(void* src_mem,
                   const int dest_stride)
 {
   float width_ratio =
-    KANSO_CAST(float, src_width) / KANSO_CAST(float, dest_width);
+      KANSO_CAST(float, src_width) / KANSO_CAST(float, dest_width);
   float height_ratio =
-    KANSO_CAST(float, src_height) / KANSO_CAST(float, dest_height);
+      KANSO_CAST(float, src_height) / KANSO_CAST(float, dest_height);
 
-  kso_uint8* row = KANSO_CAST(kso_uint8*, dest_mem);
+  kso_uint8 *row = KANSO_CAST(kso_uint8 *, dest_mem);
 
   for (int y = 0; y < dest_height; ++y) {
-    kso_uint32* pxl = KANSO_CAST(kso_uint32*, row);
+    kso_uint32 *pxl = KANSO_CAST(kso_uint32 *, row);
 
     for (int x = 0; x < dest_width; ++x) {
-      *pxl = *(KANSO_CAST(kso_uint32*, src_mem) +
+      *pxl = *(KANSO_CAST(kso_uint32 *, src_mem) +
                KANSO_CAST(int, roundf(y * height_ratio) * src_stride / 4) +
                KANSO_CAST(int, roundf(x * width_ratio)));
       ++pxl;

@@ -2,8 +2,7 @@
 #define KANSO_TYPES_H 1
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
 #define KANSO_CAST(type, value) (type)(value)

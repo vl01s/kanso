@@ -2,8 +2,7 @@
 #define KANSO_OPERATORS_H 1
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif // __cplusplus
 
 /* If `iso646.h` is not included (it shouldn't be) */
@@ -12,11 +11,10 @@ extern "C"
 #define XOR(x, y) (x ^ y)
 #endif
 
-  enum kso_bool
-  {
+enum kso_bool {
 #if defined(__STDBOOL_H)
-    KSO_FALSE = false,
-    KSO_TRUE = true,
+  KSO_FALSE = false,
+  KSO_TRUE = true,
 #else
   KSO_FALSE = 0,
   KSO_TRUE = 1,
@@ -27,9 +25,9 @@ extern "C"
 #define null_ptr(ptr) (!ptr || ptr == NULL)
 
 #if defined(__cplusplus)
-  }
+}
 #endif // __cplusplus
 
 #endif /* !KANSO_OPERATORS_H */
 
-  /// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:nopi:
+/// vim:ts=4:sts=4:sw=4:et:ai:si:sta:noci:nopi:

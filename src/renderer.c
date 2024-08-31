@@ -9,7 +9,7 @@ static VkPhysicalDevice physical_device;
 static void
 createVkInstance(void)
 {
-  VkApplicationInfo appinfo = { 0 };
+  VkApplicationInfo appinfo = {0};
   appinfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
   appinfo.pApplicationName = "OneDollarLiveVisuals";
   appinfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -17,7 +17,7 @@ createVkInstance(void)
   appinfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
   appinfo.apiVersion = VK_API_VERSION_1_3;
 
-  VkInstanceCreateInfo create_info = { 0 };
+  VkInstanceCreateInfo create_info = {0};
   create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   create_info.pApplicationInfo = &appinfo;
 
@@ -25,8 +25,8 @@ createVkInstance(void)
   vkEnumerateInstanceExtensionProperties(NULL, &property_count, NULL);
   property_count *= 2;
   VkExtensionProperties extension_properties[property_count];
-  vkEnumerateInstanceExtensionProperties(
-    NULL, &property_count, extension_properties);
+  vkEnumerateInstanceExtensionProperties(NULL, &property_count,
+                                         extension_properties);
   /* 24 Available Instance Extension Properties
    * VK_KHR_device_group_creation
    * VK_KHR_display
@@ -54,8 +54,8 @@ createVkInstance(void)
    * VK_LUNARG_direct_driver_loading
    */
   create_info.enabledExtensionCount = 2;
-  const char* const enabled_extensions[2] = { "VK_KHR_wayland_surface",
-                                              "VK_KHR_surface" };
+  const char *const enabled_extensions[2] = {"VK_KHR_wayland_surface",
+                                             "VK_KHR_surface"};
   create_info.ppEnabledExtensionNames = enabled_extensions;
 
   vkEnumerateInstanceLayerProperties(&property_count, NULL);
@@ -75,14 +75,13 @@ createVkInstance(void)
    */
   // TODO(vluis): Only enable validation layers if a flag is set (compile time)
   create_info.enabledLayerCount = 1;
-  const char* const enabled_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+  const char *const enabled_layers[1] = {"VK_LAYER_KHRONOS_validation"};
   create_info.ppEnabledLayerNames = enabled_layers;
 
   VkResult status = vkCreateInstance(&create_info, NULL, &instance);
   if (status != VK_SUCCESS) {
     verr("(createVkInstance): %s (VKResult == %d)\n",
-         "Unable to create vk instance",
-         status);
+         "Unable to create vk instance", status);
     return;
   }
 }
@@ -91,7 +90,7 @@ void
 pickVkPhysicalDevice(void)
 {
   // TODO(vluis): Implement a function that chooses the best possible physical
-  // device.
+  // device
   uint32_t device_count = 0;
   vkEnumeratePhysicalDevices(instance, &device_count, NULL);
   device_count *= 2;
@@ -107,12 +106,12 @@ pickVkPhysicalDevice(void)
   // vkGetPhysicalDeviceFeatures(physical_device, &device_features);
 
   uint32_t queue_family_count = 0;
-  vkGetPhysicalDeviceQueueFamilyProperties(
-    physical_device, &queue_family_count, NULL);
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count,
+                                           NULL);
   queue_family_count *= 2;
   VkQueueFamilyProperties queue_families[queue_family_count];
-  vkGetPhysicalDeviceQueueFamilyProperties(
-    physical_device, &queue_family_count, queue_families);
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count,
+                                           queue_families);
   for (uint32_t i = 0; i < queue_family_count; ++i) {
   }
 }

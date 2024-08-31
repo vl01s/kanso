@@ -2,17 +2,16 @@
 #define KANSO_LOG_H 1
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif /* __cplusplus */
 
-  /**
-   * Outputs string to STDERR
-   *
-   * @param msg Message string to print
-   */
-  void err(char* const msg);
-  void verr(char* const fmt, ...);
+/**
+ * Outputs string to STDERR
+ *
+ * @param msg Message string to print
+ */
+void err(char *const msg);
+void verr(char *const fmt, ...);
 
   /**
    * Kills the program execution
@@ -25,11 +24,11 @@ extern "C"
   void die(const int status, char* const msg);
   void vdie(const int status, char* const fmt, ...);
 
-  int fd_log(int fd, char* const msg);
-  int fd_vlog(int fd, char* const fmt, ...);
+int fd_log(int fd, char *const msg);
+int fd_vlog(int fd, char *const fmt, ...);
 
-  int file_log(const char* const fpath, char* const msg);
-  int file_vlog(const char* const fpath, char* const fmt, ...);
+int file_log(const char *const fpath, char *const msg);
+int file_vlog(const char *const fpath, char *const fmt, ...);
 
 #if defined(__cplusplus)
 }
