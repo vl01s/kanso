@@ -167,10 +167,13 @@ done
 
 # If SDK env not initialized
 if [[ -z ${VULKAN_SDK+X} ]]; then
-    error "WARNING: Vulkan environment not initialized"
-
-    verb_error "Falling back to \`/usr\`"
-    export VULKAN_SDK='/usr'
+    if [[ -f ./setup-env.sh ]];then
+        . ./setup-env.sh
+    else
+        error "WARNING: Vulkan environment not initialized"
+        verb_error "Falling back to \`/usr\`"
+        export VULKAN_SDK='/usr'
+    fi
 fi
 
 __autogen
