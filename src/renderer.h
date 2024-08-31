@@ -20,11 +20,11 @@ extern "C" {
 #define UNINITIALIZED_BUFFER -1
 #endif /* !UNINITIALIZED_BUFFER */
 
-  static void createVkInstance(void);
-  void pickVkPhysicalDevice(void);
-  void initVk(void);
-  void cleanup(void);
-  bool rendererSafeToRead(void);
+static void createVkInstance(void);
+void pickVkPhysicalDevice(void);
+void initVk(void);
+void cleanup(void);
+bool rendererSafeToRead(void);
 
 #if defined(__cplusplus)
 }

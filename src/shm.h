@@ -5,17 +5,17 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include <sys/types.h>
+#include <types.h>
 
-  /**
-   * Generates a random name for the first 'n' characters of 'name'
-   *
-   * @param name The string name
-   * @param n The number of first `n` chars
-   */
-  static void randName(char name[], const int n);
-  static int createShm(void);
-  int allocateShm(const size_t size);
+/**
+ * Generates a random name for the first 'n' characters of 'name'
+ *
+ * @param name The string name
+ * @param n The number of first `n` chars
+ */
+static void randName(char name[], const int n);
+static int createShm(void);
+int allocateShm(const ko_size_t size);
 
 #if defined(__cplusplus)
 }

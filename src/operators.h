@@ -19,8 +19,9 @@ enum kso_bool {
   KSO_FALSE = 0,
   KSO_TRUE = 1,
 };
-#define kanso_bool enum kso_bool
 #endif
+
+#define kanso_bool enum kso_bool
 
 #define null_ptr(ptr) (!ptr || ptr == NULL)
 

@@ -13,16 +13,16 @@ extern "C" {
 void err(char *const msg);
 void verr(char *const fmt, ...);
 
-  /**
-   * Kills the program execution
-   *
-   * If status is non-zero and message is given then output will be STDERR
-   *
-   * @param status Exit code for the program
-   * @param msg Message string to print, can be `NULL` if no message is needed
-   */
-  void die(const int status, char* const msg);
-  void vdie(const int status, char* const fmt, ...);
+/**
+ * Kills the program execution
+ *
+ * If status is non-zero and message is given then output will be STDERR
+ *
+ * @param status Exit code for the program
+ * @param msg Message string to print, can be `NULL` if no message is needed
+ */
+void die(const int status, char* const msg);
+void vdie(const int status, char* const fmt, ...);
 
 int fd_log(int fd, char *const msg);
 int fd_vlog(int fd, char *const fmt, ...);
