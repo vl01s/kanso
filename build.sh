@@ -197,8 +197,9 @@ mkdir -p "$OBJ_DIR"
 for F in src/*.c; do
     FILE="$(basename "$F")"
     OFILE="${OBJ_DIR}/${FILE%.c}.o"
+    O_FILENAMES+=("$OFILE")
 
-    verb_log "$F ==> ${OBJ_DIR}/${FILE%.c}.o"
+    verb_log "$F ==> $OFILE"
 
     gcc -c src/"$FILE" -o "$OBJ_DIR/${FILE%.c}.o" \
         "${COMPILER_FLAGS[@]}" \
