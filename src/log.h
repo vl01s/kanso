@@ -1,30 +1,48 @@
 #ifndef KANSO_LOG_H
-#define KANSO_LOG_H
+#define KANSO_LOG_H 1
 
-#ifdef __cplusplus
+#if defined(__cplusplus)
 extern "C" {
 #endif /* __cplusplus */
 
+/* ----------------------------------------------------------------------------*/
 /**
- * Outputs string to STDERR
+ * Outputs string to STDERR (`%s\n` format)
  *
  * @param msg Message string to print
  */
-void err_msg(char *const msg);
-void verr_msg(char *const fmt, ...);
+/* ----------------------------------------------------------------------------*/
+void err(char *const msg);
+/* ----------------------------------------------------------------------------*/
 
+/**
+ * Outputs format string (and subsequent data) to STDERR
+ *
+ * @param fmt Format string
+ */
+/* ----------------------------------------------------------------------------*/
+void verr(char *const fmt, ...);
+
+/* ----------------------------------------------------------------------------*/
 /**
  * Kills the program execution
  *
  * If status is non-zero and message is given then output will be STDERR
  *
  * @param status Exit code for the program
- * @param msg Message string to print, can be `NULL` if no message is needed
+ * @param msg Message string to print, can be NULL if no message is needed
  */
-void die(const int status, char *const msg);
-void vdie(const int status, char *const fmt, ...);
+/* ----------------------------------------------------------------------------*/
+void die(const int status, char* const msg);
+void vdie(const int status, char* const fmt, ...);
 
-#ifdef __cplusplus
+int fd_log(int fd, char *const msg);
+int fd_vlog(int fd, char *const fmt, ...);
+
+int file_log(char *const fpath, char *const msg);
+int file_vlog(char *const fpath, char *const fmt, ...);
+
+#if defined(__cplusplus)
 }
 #endif /* __cplusplus */
 

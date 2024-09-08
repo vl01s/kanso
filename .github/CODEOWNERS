@@ -1,6 +1,8 @@
-*                   @vl01s @DrKJeff16
+*                       @vl01s @DrKJeff16
 
-/src/log.c          @DrKJeff16
-/src/log.h          @DrKJeff16
-/build.sh           @DrKJeff16 @vl01s
-/.github/CODEOWNERS @DrKJeff16
+/src/log.c              @DrKJeff16
+/src/log.h              @DrKJeff16
+/src/operators.h        @DrKJeff16
+/src/types.h            @DrKJeff16
+/build.sh               @DrKJeff16 @vl01s
+/.github/CODEOWNERS     @DrKJeff16

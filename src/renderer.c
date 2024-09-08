@@ -1,7 +1,7 @@
 /* #include <math.h> */
-#include <stdint.h>
-#include <renderer.h>
+#include <types.h>
 #include <log.h>
+#include <renderer.h>
 
 static VkInstance instance;
 static VkPhysicalDevice physical_device;
@@ -20,11 +20,12 @@ static void createVkInstance(void)
     create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     create_info.pApplicationInfo = &appinfo;
 
-    uint32_t property_count;
+    kso_uint32 property_count;
     vkEnumerateInstanceExtensionProperties(NULL, &property_count, NULL);
     property_count *= 2;
     VkExtensionProperties extension_properties[property_count];
-    vkEnumerateInstanceExtensionProperties(NULL, &property_count, extension_properties);
+    vkEnumerateInstanceExtensionProperties(NULL, &property_count,
+            extension_properties);
     /* 24 Available Instance Extension Properties
      * VK_KHR_device_group_creation
      * VK_KHR_display
@@ -52,7 +53,8 @@ static void createVkInstance(void)
      * VK_LUNARG_direct_driver_loading
      */
     create_info.enabledExtensionCount = 2;
-    const char* const enabled_extensions[2] = {"VK_KHR_wayland_surface", "VK_KHR_surface"};
+    const char *const enabled_extensions[2] = {"VK_KHR_wayland_surface",
+        "VK_KHR_surface"};
     create_info.ppEnabledExtensionNames = enabled_extensions;
 
     vkEnumerateInstanceLayerProperties(&property_count, NULL);
@@ -72,19 +74,22 @@ static void createVkInstance(void)
      */
     // TODO(vluis): Only enable validation layers if a flag is set (compile time)
     create_info.enabledLayerCount = 1;
-    const char* const enabled_layers[1] = {"VK_LAYER_KHRONOS_validation"};
+    const char *const enabled_layers[1] = {"VK_LAYER_KHRONOS_validation"};
     create_info.ppEnabledLayerNames = enabled_layers;
 
-    if (vkCreateInstance(&create_info, NULL, &instance) != VK_SUCCESS) {
-        err_msg("Error: Unable to create vk instance");
+    VkResult status = vkCreateInstance(&create_info, NULL, &instance);
+    if (status != VK_SUCCESS) {
+        verr("(createVkInstance): %s (VKResult == %d)\n",
+                "Unable to create vk instance", status);
         return;
     }
 }
 
 void pickVkPhysicalDevice(void)
 {
-    // TODO(vluis): Implement a function that chooses the best possible physical device.
-    uint32_t device_count;
+    // TODO(vluis): Implement a function that chooses the best possible physical
+    // device
+    kso_uint32 device_count = 0;
     vkEnumeratePhysicalDevices(instance, &device_count, NULL);
     device_count *= 2;
     VkPhysicalDevice devices[device_count];
@@ -98,13 +103,14 @@ void pickVkPhysicalDevice(void)
     // VkPhysicalDeviceFeatures device_features;
     // vkGetPhysicalDeviceFeatures(physical_device, &device_features);
 
-
-    uint32_t queue_family_count = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, NULL);
+    kso_uint32 queue_family_count = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count,
+            NULL);
     queue_family_count *= 2;
     VkQueueFamilyProperties queue_families[queue_family_count];
-    vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, queue_families);
-    for (uint32_t i = 0; i < queue_family_count; ++i) {
+    vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count,
+            queue_families);
+    for (kso_uint32 i = 0; i < queue_family_count; ++i) {
     }
 }
 

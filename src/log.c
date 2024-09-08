@@ -1,20 +1,102 @@
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <log.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <log.h>
+#include <operators.h>
 
-void err_msg(char *msg)
+void err(char *const msg)
 {
-    if (!msg || msg == NULL) {
+    if (null_ptr(msg)) {
         return;
     }
 
     fprintf(stderr, "%s\n", msg);
 }
 
-void verr_msg(char *const fmt, ...)
+int fd_log(int fd, char *const msg)
 {
-    if (!fmt || fmt == NULL) {
+    if (fd < 0 || null_ptr(msg)) {
+        return -1;
+    }
+
+    if (!strlen(msg)) {
+        return -1;
+    }
+
+    return write(fd, msg, strlen(msg));
+}
+
+int fd_vlog(int fd, char *const fmt, ...)
+{
+    if (fd < 0 || null_ptr(fmt)) {
+        return -1;
+    }
+
+    va_list argp;
+
+    va_start(argp, fmt);
+    int res = vdprintf(fd, fmt, argp);
+    va_end(argp);
+
+    return res;
+}
+
+int file_log(char *const fpath, char *const msg)
+{
+    if (null_ptr(fpath) || null_ptr(msg)) {
+        return -1;
+    }
+
+    int fd = open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
+
+    if (fd < 0) {
+        verr("(file_log): File `%s` can't be opened (fd: %d)", fpath, fd);
+        return -1;
+    }
+
+    int write_d = write(fd, msg, strlen(msg));
+    if (write_d < 0) {
+        verr("(file_log): File `%s` couldn't be written to (fd: %d)", fpath, fd);
+        close(fd);
+        return write_d;
+    }
+
+    return close(fd);
+}
+
+int file_vlog(char *const fpath, char *const fmt, ...)
+{
+    if (null_ptr(fpath) || null_ptr(fmt)) {
+        return -1;
+    }
+
+    int fd = open(fpath, O_CREAT | O_APPEND, S_IROTH | S_IRUSR | S_IRGRP | S_IWUSR);
+
+    if (fd < 0) {
+        verr("(file_vlog): File `%s` can't be opened (fd: %d)", fpath, fd);
+        return -1;
+    }
+
+    va_list argp;
+
+    va_start(argp, fmt);
+    int res = vdprintf(fd, fmt, argp);
+    va_end(argp);
+
+    if (res > 0) {
+        return close(fd);
+    }
+
+    /// If `res` is less than 0
+    return res;
+}
+
+void verr(char *const fmt, ...)
+{
+    if (null_ptr(fmt)) {
         return;
     }
 
@@ -25,12 +107,10 @@ void verr_msg(char *const fmt, ...)
     va_end(argp);
 }
 
-void die(const int status, char *msg)
+void die(const int status, char *const msg)
 {
-    if (status && msg != NULL) { // Non-zero status and non-empty message
-        err_msg(msg);
-    } else if (msg != NULL) { // Status is zero and non-empty message
-        printf("%s\n", msg);
+    if (!null_ptr(msg)) { /// Non-empty message
+        fprintf(status ? stderr : stdout, "%s\n", msg);
     }
 
     exit(status);
@@ -38,16 +118,11 @@ void die(const int status, char *msg)
 
 void vdie(const int status, char *const fmt, ...)
 {
-    if (fmt && fmt != NULL) {
-        FILE *f = stdout;
+    if (!null_ptr(fmt)) { /// Non-empty format string
         va_list argp;
 
-        if (status) {
-            f = stderr;
-        }
-
         va_start(argp, fmt);
-        vfprintf(f, fmt, argp);
+        vfprintf(status ? stderr : stdout, fmt, argp);
         va_end(argp);
     }
 
