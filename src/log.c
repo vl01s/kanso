@@ -1,11 +1,11 @@
+#include <string.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <log.h>
-#include <operators.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <operators.h>
 
 void err(char *const msg)
 {
@@ -19,6 +19,10 @@ void err(char *const msg)
 int fd_log(int fd, char *const msg)
 {
     if (fd < 0 || null_ptr(msg)) {
+        return -1;
+    }
+
+    if (!strlen(msg)) {
         return -1;
     }
 
@@ -40,7 +44,7 @@ int fd_vlog(int fd, char *const fmt, ...)
     return res;
 }
 
-int file_log(const char *const fpath, char *const msg)
+int file_log(char *const fpath, char *const msg)
 {
     if (null_ptr(fpath) || null_ptr(msg)) {
         return -1;
@@ -63,7 +67,7 @@ int file_log(const char *const fpath, char *const msg)
     return close(fd);
 }
 
-int file_vlog(const char *const fpath, char *const fmt, ...)
+int file_vlog(char *const fpath, char *const fmt, ...)
 {
     if (null_ptr(fpath) || null_ptr(fmt)) {
         return -1;
@@ -76,17 +80,17 @@ int file_vlog(const char *const fpath, char *const fmt, ...)
         return -1;
     }
 
-    int res = 0;
-
     va_list argp;
+
     va_start(argp, fmt);
-    res = vdprintf(fd, fmt, argp);
+    int res = vdprintf(fd, fmt, argp);
     va_end(argp);
 
     if (res > 0) {
         return close(fd);
     }
 
+    /// If `res` is less than 0
     return res;
 }
 
@@ -114,7 +118,7 @@ void die(const int status, char *const msg)
 
 void vdie(const int status, char *const fmt, ...)
 {
-    if (!null_ptr(fmt)) {
+    if (!null_ptr(fmt)) { /// Non-empty format string
         va_list argp;
 
         va_start(argp, fmt);
